@@ -66,23 +66,6 @@ async function main() {
 
   const sceneObjects = [cube, icosphere, plane]
 
-  // #️⃣ Configuramos el VertexArray de cada objeto (con el mapeo atributos-buffers y el buffer de indices a usar)
-
-  cube.vertexArray.bind()
-  basicProgram.setAttributeVertexBuffer('vertexPosition', cube.geometry.vertexBuffers.get('vertexPosition'))
-  cube.indexBuffer.bind()
-  cube.vertexArray.unbind()
-
-  icosphere.vertexArray.bind()
-  basicProgram.setAttributeVertexBuffer('vertexPosition', icosphere.geometry.vertexBuffers.get('vertexPosition'))
-  icosphere.indexBuffer.bind()
-  icosphere.vertexArray.unbind()
-
-  plane.vertexArray.bind()
-  basicProgram.setAttributeVertexBuffer('vertexPosition', plane.geometry.vertexBuffers.get('vertexPosition'))
-  plane.indexBuffer.bind()
-  plane.vertexArray.unbind()
-
   // #️⃣ Definimos la posición/escalado/rotación inicial de cada objeto
 
   cube.position = [1.5, 1, 0]
