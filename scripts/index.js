@@ -36,8 +36,8 @@ async function main() {
 
   // #️⃣ Creamos la cámara y sus controles para movimiento en orbita
 
-  const position = [-8, 5, 8]
-  const target = [0, 0, 0]
+  const position = [9, 6, 9]
+  const target = [0, 0.5, 0]
   const up = [0, 1, 0]
 
   const fov = 45
