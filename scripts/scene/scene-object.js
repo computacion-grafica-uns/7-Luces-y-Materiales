@@ -7,15 +7,15 @@ export class SceneObject {
   rotation = [0, 0, 0]
   scale = [1, 1, 1]
   _geometry
-  _color
+  _material
   _modelMatrix
   _vertexArray
   _indexBuffer
   _drawMode
 
-  constructor(gl, geometry, color, useWireframe) {
+  constructor(gl, geometry, material, useWireframe) {
     this._geometry = geometry
-    this._color = color
+    this._material = material
     this._modelMatrix = mat4.create()
     this._vertexArray = new VertexArray(gl)
     this._indexBuffer = useWireframe ? geometry.indexLinesBuffer : geometry.indexTrianglesBuffer
@@ -26,8 +26,8 @@ export class SceneObject {
     return this._geometry
   }
 
-  get color() {
-    return this._color
+  get material() {
+    return this._material
   }
 
   get modelMatrix() {

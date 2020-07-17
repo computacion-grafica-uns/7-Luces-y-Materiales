@@ -8,6 +8,7 @@ import { Camera } from './scene/camera.js'
 import { CameraOrbitControls } from './scene/camera-orbit-controls.js'
 import { Geometry } from './scene/geometry.js'
 import { SceneObject } from './scene/scene-object.js'
+import { Material } from './scene/material.js'
 
 async function main() {
   // #️⃣ Cargamos assets a usar (modelos, código de shaders, etc)
@@ -41,21 +42,27 @@ async function main() {
   const camera = new Camera(position, target, up, fov, aspect, near, far)
   const cameraOrbitControls = new CameraOrbitControls(camera, canvas)
 
-  // #️⃣ Creamos el programa a usar
+  // #️⃣ Programas a usar
 
   const basicProgram = new Program(gl, basicVertexShaderSource, basicFragmentShaderSource)
 
-  // #️⃣ Creamos las geometrías a usar
+  // #️⃣ Materiales a usar
+
+  const whiteBasicMaterial = new Material(basicProgram, { color: Color.white })
+  const greenBasicMaterial = new Material(basicProgram, { color: Color.green })
+  const greyBasicMaterial = new Material(basicProgram, { color: Color.grey })
+
+  // #️⃣ Geometrías a usar
 
   const cubeGeometry = new Geometry(gl, cubeGeometryData)
   const icosphereGeometry = new Geometry(gl, icosphereGeometryData)
   const planeGeometry = new Geometry(gl, planeGeometryData)
 
-  // #️⃣ Creamos los objetos de la escena
+  // #️⃣ Objetos de la escena
 
-  const cube = new SceneObject(gl, cubeGeometry, Color.white, true)
-  const icosphere = new SceneObject(gl, icosphereGeometry, Color.green, true)
-  const plane = new SceneObject(gl, planeGeometry, Color.grey, false)
+  const cube = new SceneObject(gl, cubeGeometry, whiteBasicMaterial, true)
+  const icosphere = new SceneObject(gl, icosphereGeometry, greenBasicMaterial, true)
+  const plane = new SceneObject(gl, planeGeometry, greyBasicMaterial, false)
 
   const sceneObjects = [cube, icosphere, plane]
 
@@ -87,10 +94,6 @@ async function main() {
   plane.scale = [4, 1, 4]
   plane.updateModelMatrix()
 
-  // #️⃣ Establecemos el programa a usar (común a todos los objetos de la escena)
-
-  basicProgram.use()
-
   // 🖼 Dibujamos la escena
 
   function render() {
@@ -100,20 +103,21 @@ async function main() {
     // Limpiamos buffers de color y profundidad del canvas antes de empezar a dibujar los objetos de la escena
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-    // Actualizamos los uniforms relacionados a la cámara (comunes a todos los objetos de la escena)
-    basicProgram.setUniformValue('viewMatrix', camera.viewMatrix)
-    basicProgram.setUniformValue('projectionMatrix', camera.projectionMatrix)
-
-    /* 📝
-     * Dibujar cada objeto en la escena consiste de los siguientes pasos:
-     * 1. Actualizar los valores de uniforms específicos a cada uno.
-     * 2. Definir sus conexiones atributo-buffer e indice a usar (mediante su VertexArray o VAO)
-     * 3. Dibujarlo
-     */
-
     for (const sceneObject of sceneObjects) {
-      basicProgram.setUniformValue('modelMatrix', sceneObject.modelMatrix)
-      basicProgram.setUniformValue('material.color', sceneObject.color)
+      const material = sceneObject.material
+
+      material.program.use()
+
+      material.program.setUniformValue('viewMatrix', camera.viewMatrix)
+      material.program.setUniformValue('projectionMatrix', camera.projectionMatrix)
+      material.program.setUniformValue('modelMatrix', sceneObject.modelMatrix)
+
+      // Seteamos las propiedades del material
+
+      for (const [materialPropertyName, materialPropertyValue] of material.properties) {
+        const materialPropertyUniformName = `material.${materialPropertyName}`
+        material.program.setUniformValue(materialPropertyUniformName, materialPropertyValue)
+      }
 
       sceneObject.vertexArray.bind()
 
