@@ -15,6 +15,8 @@ async function main() {
 
   const basicVertexShaderSource = await getFileContentsAsText('shaders/basic.vert.glsl')
   const basicFragmentShaderSource = await getFileContentsAsText('shaders/basic.frag.glsl')
+  const normalsVertexShaderSource = await getFileContentsAsText('shaders/normals.vert.glsl')
+  const normalsFragmentShaderSource = await getFileContentsAsText('shaders/normals.frag.glsl')
 
   const cubeGeometryData = await parseGeometryData('models/cube.obj')
   const icosphereGeometryData = await parseGeometryData('models/icosphere.obj')
@@ -45,12 +47,13 @@ async function main() {
   // #️⃣ Programas a usar
 
   const basicProgram = new Program(gl, basicVertexShaderSource, basicFragmentShaderSource)
+  const normalsProgram = new Program(gl, normalsVertexShaderSource, normalsFragmentShaderSource)
 
   // #️⃣ Materiales a usar
 
   const whiteBasicMaterial = new Material(basicProgram, { color: Color.white })
-  const greenBasicMaterial = new Material(basicProgram, { color: Color.green })
   const greyBasicMaterial = new Material(basicProgram, { color: Color.grey })
+  const normalsMaterial = new Material(normalsProgram)
 
   // #️⃣ Geometrías a usar
 
@@ -61,7 +64,7 @@ async function main() {
   // #️⃣ Objetos de la escena
 
   const cube = new SceneObject(gl, cubeGeometry, whiteBasicMaterial, true)
-  const icosphere = new SceneObject(gl, icosphereGeometry, greenBasicMaterial, true)
+  const icosphere = new SceneObject(gl, icosphereGeometry, normalsMaterial, false)
   const plane = new SceneObject(gl, planeGeometry, greyBasicMaterial, false)
 
   const sceneObjects = [cube, icosphere, plane]
