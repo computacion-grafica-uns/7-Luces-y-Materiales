@@ -12,8 +12,8 @@ import { SceneObject } from './scene/scene-object.js'
 async function main() {
   // #️⃣ Cargamos assets a usar (modelos, código de shaders, etc)
 
-  const vertexShaderSource = await getFileContentsAsText('shaders/basic.vert.glsl')
-  const fragmentShaderSource = await getFileContentsAsText('shaders/basic.frag.glsl')
+  const basicVertexShaderSource = await getFileContentsAsText('shaders/basic.vert.glsl')
+  const basicFragmentShaderSource = await getFileContentsAsText('shaders/basic.frag.glsl')
 
   const cubeGeometryData = await parseGeometryData('models/cube.obj')
   const icosphereGeometryData = await parseGeometryData('models/icosphere.obj')
@@ -43,7 +43,7 @@ async function main() {
 
   // #️⃣ Creamos el programa a usar
 
-  const program = new Program(gl, vertexShaderSource, fragmentShaderSource)
+  const basicProgram = new Program(gl, basicVertexShaderSource, basicFragmentShaderSource)
 
   // #️⃣ Creamos las geometrías a usar
 
@@ -62,17 +62,17 @@ async function main() {
   // #️⃣ Configuramos el VertexArray de cada objeto (con el mapeo atributos-buffers y el buffer de indices a usar)
 
   cube.vertexArray.bind()
-  program.setAttributeVertexBuffer('vertexPosition', cube.geometry.vertexBuffers.get('vertexPosition'))
+  basicProgram.setAttributeVertexBuffer('vertexPosition', cube.geometry.vertexBuffers.get('vertexPosition'))
   cube.indexBuffer.bind()
   cube.vertexArray.unbind()
 
   icosphere.vertexArray.bind()
-  program.setAttributeVertexBuffer('vertexPosition', icosphere.geometry.vertexBuffers.get('vertexPosition'))
+  basicProgram.setAttributeVertexBuffer('vertexPosition', icosphere.geometry.vertexBuffers.get('vertexPosition'))
   icosphere.indexBuffer.bind()
   icosphere.vertexArray.unbind()
 
   plane.vertexArray.bind()
-  program.setAttributeVertexBuffer('vertexPosition', plane.geometry.vertexBuffers.get('vertexPosition'))
+  basicProgram.setAttributeVertexBuffer('vertexPosition', plane.geometry.vertexBuffers.get('vertexPosition'))
   plane.indexBuffer.bind()
   plane.vertexArray.unbind()
 
@@ -89,7 +89,7 @@ async function main() {
 
   // #️⃣ Establecemos el programa a usar (común a todos los objetos de la escena)
 
-  program.use()
+  basicProgram.use()
 
   // 🖼 Dibujamos la escena
 
@@ -101,8 +101,8 @@ async function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
     // Actualizamos los uniforms relacionados a la cámara (comunes a todos los objetos de la escena)
-    program.setUniformValue('viewMatrix', camera.viewMatrix)
-    program.setUniformValue('projectionMatrix', camera.projectionMatrix)
+    basicProgram.setUniformValue('viewMatrix', camera.viewMatrix)
+    basicProgram.setUniformValue('projectionMatrix', camera.projectionMatrix)
 
     /* 📝
      * Dibujar cada objeto en la escena consiste de los siguientes pasos:
@@ -112,8 +112,8 @@ async function main() {
      */
 
     for (const sceneObject of sceneObjects) {
-      program.setUniformValue('modelMatrix', sceneObject.modelMatrix)
-      program.setUniformValue('color', sceneObject.color)
+      basicProgram.setUniformValue('modelMatrix', sceneObject.modelMatrix)
+      basicProgram.setUniformValue('material.color', sceneObject.color)
 
       sceneObject.vertexArray.bind()
 
