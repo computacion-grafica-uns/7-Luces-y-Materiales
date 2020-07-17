@@ -9,6 +9,7 @@ export class SceneObject {
   _geometry
   _material
   _modelMatrix
+  _normalMatrix
   _vertexArray
   _indexBuffer
   _drawMode
@@ -17,6 +18,7 @@ export class SceneObject {
     this._geometry = geometry
     this._material = material
     this._modelMatrix = mat4.create()
+    this._normalMatrix = mat4.create()
     this._vertexArray = new VertexArray(gl)
     this._indexBuffer = useWireframe ? geometry.indexLinesBuffer : geometry.indexTrianglesBuffer
     this._drawMode = useWireframe ? gl.LINES : gl.TRIANGLES
@@ -34,6 +36,10 @@ export class SceneObject {
 
   get modelMatrix() {
     return this._modelMatrix
+  }
+
+  get normalMatrix() {
+    return this._normalMatrix
   }
 
   get vertexArray() {
@@ -59,6 +65,12 @@ export class SceneObject {
     mat4.rotateY(this._modelMatrix, this._modelMatrix, rotationY)
     mat4.rotateZ(this._modelMatrix, this._modelMatrix, rotationZ)
     mat4.scale(this._modelMatrix, this._modelMatrix, this.scale)
+  }
+
+  updateNormalMatrix(viewMatrix) {
+    mat4.multiply(this._normalMatrix, viewMatrix, this._modelMatrix)
+    mat4.invert(this._normalMatrix, this._normalMatrix)
+    mat4.transpose(this._normalMatrix, this._normalMatrix)
   }
 
   _setupVertexArray() {
