@@ -2,7 +2,7 @@ export class Material {
   _program
   _properties
 
-  constructor(program, properties) {
+  constructor(program, properties = {}) {
     this._program = program
     this._properties = new Map()
 
