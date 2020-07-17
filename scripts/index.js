@@ -51,9 +51,9 @@ async function main() {
 
   // #️⃣ Materiales a usar
 
-  const whiteBasicMaterial = new Material(basicProgram, { color: Color.white })
-  const greyBasicMaterial = new Material(basicProgram, { color: Color.grey })
-  const normalsMaterial = new Material(normalsProgram)
+  const whiteBasicMaterial = new Material(basicProgram, false, { color: Color.white })
+  const greyBasicMaterial = new Material(basicProgram, false, { color: Color.grey })
+  const normalsMaterial = new Material(normalsProgram, false)
 
   // #️⃣ Geometrías a usar
 
