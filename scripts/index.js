@@ -23,6 +23,7 @@ async function main() {
   const cubeGeometryData = await parseGeometryData('models/cube.obj')
   const icosphereGeometryData = await parseGeometryData('models/icosphere.obj')
   const planeGeometryData = await parseGeometryData('models/plane.obj')
+  const suzanneGeometryData = await parseGeometryData('models/suzanne.obj')
 
   // #️⃣ Configuración base de WebGL
 
@@ -64,14 +65,16 @@ async function main() {
   const cubeGeometry = new Geometry(gl, cubeGeometryData)
   const icosphereGeometry = new Geometry(gl, icosphereGeometryData)
   const planeGeometry = new Geometry(gl, planeGeometryData)
+  const suzanneGeometry = new Geometry(gl, suzanneGeometryData)
 
   // #️⃣ Objetos de la escena
 
   const cube = new SceneObject(gl, cubeGeometry, whiteBasicMaterial, true)
   const icosphere = new SceneObject(gl, icosphereGeometry, normalsMaterial, false)
   const plane = new SceneObject(gl, planeGeometry, greyBasicMaterial, false)
+  const suzanne = new SceneObject(gl, suzanneGeometry, whiteLambertMaterial, false)
 
-  const sceneObjects = [cube, icosphere, plane]
+  const sceneObjects = [cube, icosphere, plane, suzanne]
 
   // #️⃣ Definimos la posición/escalado/rotación inicial de cada objeto
 
@@ -83,6 +86,9 @@ async function main() {
 
   plane.scale = [4, 1, 4]
   plane.updateModelMatrix()
+
+  suzanne.position = [0, 3.5, 0]
+  suzanne.updateModelMatrix()
 
   // 🖼 Dibujamos la escena
 
