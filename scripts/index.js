@@ -68,7 +68,7 @@ async function main() {
   const planeGeometry = new Geometry(gl, planeGeometryData)
   const suzanneGeometry = new Geometry(gl, suzanneGeometryData)
 
-  // #️⃣ Objetos de la escena
+  // #️⃣ Objetos de la escena e iluminación
 
   const cube = new SceneObject(gl, cubeGeometry, whiteBasicMaterial, true)
   const icosphere = new SceneObject(gl, icosphereGeometry, normalsMaterial, false)
@@ -103,6 +103,7 @@ async function main() {
     // Limpiamos buffers de color y profundidad del canvas antes de empezar a dibujar los objetos de la escena
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
+    // Dibujamos cada objeto de la escena
     for (const sceneObject of sceneObjects) {
       const material = sceneObject.material
 
@@ -113,21 +114,18 @@ async function main() {
       material.program.setUniformValue('modelMatrix', sceneObject.modelMatrix)
 
       // Seteamos las propiedades del material
-
       for (const [materialPropertyName, materialPropertyValue] of material.properties) {
         const materialPropertyUniformName = `material.${materialPropertyName}`
         material.program.setUniformValue(materialPropertyUniformName, materialPropertyValue)
       }
 
       // Actualizamos y seteamos (de ser necesario) el valor de la normal matrix
-
       if (material.usesNormalMatrix) {
         sceneObject.updateNormalMatrix(camera.viewMatrix)
         material.program.setUniformValue('normalMatrix', sceneObject.normalMatrix)
       }
 
       // Seteamos (de ser necesario) información de las luces de la escena
-
       if (material.isAffectedByLight) {
         material.program.setUniformValue('ambientLight.color', ambientLight.color)
         material.program.setUniformValue('pointLight.color', pointLight.color)
