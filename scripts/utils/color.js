@@ -4,4 +4,5 @@ export const Color = {
   green: [0, 1, 0],
   blue: [0, 0, 1],
   grey: [0.2, 0.2, 0.2],
+  darkGrey: [0.1, 0.1, 0.1],
 }

@@ -9,6 +9,7 @@ import { CameraOrbitControls } from './scene/camera-orbit-controls.js'
 import { Geometry } from './scene/geometry.js'
 import { SceneObject } from './scene/scene-object.js'
 import { Material } from './scene/material.js'
+import { AmbientLight, PointLight } from './scene/lights.js'
 
 async function main() {
   // #️⃣ Cargamos assets a usar (modelos, código de shaders, etc)
@@ -76,6 +77,9 @@ async function main() {
 
   const sceneObjects = [cube, icosphere, plane, suzanne]
 
+  const ambientLight = new AmbientLight(Color.darkGrey)
+  const pointLight = new PointLight(Color.white, [-4, 8, 8])
+
   // #️⃣ Definimos la posición/escalado/rotación inicial de cada objeto
 
   cube.position = [1.5, 1, 0]
@@ -113,6 +117,21 @@ async function main() {
       for (const [materialPropertyName, materialPropertyValue] of material.properties) {
         const materialPropertyUniformName = `material.${materialPropertyName}`
         material.program.setUniformValue(materialPropertyUniformName, materialPropertyValue)
+      }
+
+      // Actualizamos y seteamos (de ser necesario) el valor de la normal matrix
+
+      if (material.usesNormalMatrix) {
+        sceneObject.updateNormalMatrix(camera.viewMatrix)
+        material.program.setUniformValue('normalMatrix', sceneObject.normalMatrix)
+      }
+
+      // Seteamos (de ser necesario) información de las luces de la escena
+
+      if (material.isAffectedByLight) {
+        material.program.setUniformValue('ambientLight.color', ambientLight.color)
+        material.program.setUniformValue('pointLight.color', pointLight.color)
+        material.program.setUniformValue('pointLight.position', pointLight.position)
       }
 
       sceneObject.vertexArray.bind()
