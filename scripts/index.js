@@ -17,6 +17,8 @@ async function main() {
   const basicFragmentShaderSource = await getFileContentsAsText('shaders/basic.frag.glsl')
   const normalsVertexShaderSource = await getFileContentsAsText('shaders/normals.vert.glsl')
   const normalsFragmentShaderSource = await getFileContentsAsText('shaders/normals.frag.glsl')
+  const lambertVertexShaderSource = await getFileContentsAsText('shaders/lambert.vert.glsl')
+  const lambertFragmentShaderSource = await getFileContentsAsText('shaders/lambert.frag.glsl')
 
   const cubeGeometryData = await parseGeometryData('models/cube.obj')
   const icosphereGeometryData = await parseGeometryData('models/icosphere.obj')
@@ -48,11 +50,13 @@ async function main() {
 
   const basicProgram = new Program(gl, basicVertexShaderSource, basicFragmentShaderSource)
   const normalsProgram = new Program(gl, normalsVertexShaderSource, normalsFragmentShaderSource)
+  const lambertProgram = new Program(gl, lambertVertexShaderSource, lambertFragmentShaderSource)
 
   // #️⃣ Materiales a usar
 
   const whiteBasicMaterial = new Material(basicProgram, false, { color: Color.white })
   const greyBasicMaterial = new Material(basicProgram, false, { color: Color.grey })
+  const whiteLambertMaterial = new Material(lambertProgram, true, { color: Color.white })
   const normalsMaterial = new Material(normalsProgram, false)
 
   // #️⃣ Geometrías a usar
