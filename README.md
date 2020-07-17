@@ -1,13 +1,8 @@
-# Refactoring 🧹
+# Luces y Materiales 💡 🧱
 
 <p align="center">
   <img src="docs/previews.png"/>
 </p>
-
-### Branches 🌳
-
-- `1er nivel de abstracción`
-- `2do nivel de abstracción`
 
 ### Uso 💻
 
